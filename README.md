@@ -29,3 +29,5 @@ Offline:
 CLIENT_NAME6
 CLIENT_NAME7 (last seen 15 min ago)
 ```
+
+Information automactically updates every 2 seconds

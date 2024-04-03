@@ -31,3 +31,4 @@ CLIENT_NAME7 (last seen 15 min ago)
 ```
 
 Information automactically updates every 2 seconds
+For any questions contact my tg: @ishr00m

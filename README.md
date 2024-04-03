@@ -18,11 +18,11 @@ Test at Ubuntu Server 22.04.4 LTS
 
 Script output should looks like:
 ```
-CLIENT_NAME1:      RX: 4.64 GB    , TX: 327.09 MB  2 мин. назад
-CLIENT_NAME2:      RX: 869.96 MB  , TX: 47.22 MB   0 мин. назад
-CLIENT_NAME3:      RX: 774.86 MB  , TX: 33.36 MB   1 мин. назад
-CLIENT_NAME4:      RX: 85.94 MB   , TX: 29.89 MB   1 мин. назад
-CLIENT_NAME5:      RX: 87.34 MB   , TX: 17.68 MB   2 мин. назад
+CLIENT_NAME1:      RX: 4.64 GB    , TX: 327.09 MB  2 min. ago
+CLIENT_NAME2:      RX: 869.96 MB  , TX: 47.22 MB   0 min. ago
+CLIENT_NAME3:      RX: 774.86 MB  , TX: 33.36 MB   1 min. ago
+CLIENT_NAME4:      RX: 85.94 MB   , TX: 29.89 MB   1 min. ago
+CLIENT_NAME5:      RX: 87.34 MB   , TX: 17.68 MB   2 min. ago
 
 Offline:
 

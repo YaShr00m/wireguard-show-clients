@@ -18,7 +18,7 @@ Test at Ubuntu Server 22.04.4 LTS
 
 Script output should looks like:
 ```
-CLIENT NAME 1| RX: 34.05 GB   |  TX: 534.47 MB  | 0m ago
+CLIENT NAME 1 | RX: 34.05 GB   |  TX: 534.47 MB  | 0m ago
 CLIENT NAME 2 | RX: 13.12 GB   |  TX: 904.05 MB  | 1m ago
 CLIENT NAME 3 | RX: 1.52 GB    |  TX: 779.95 MB  | 0m ago
 CLIENT NAME 4 | RX: 1.54 GB    |  TX: 302.7 MB   | 0m ago

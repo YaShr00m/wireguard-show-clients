@@ -19,10 +19,13 @@ def bytes_to_megabytes(bytes):
         return f"{mb} MB"
 
 # Функция для определения времени, прошедшего с момента handshake в минутах
-def calculate_minutes_ago(last_handshake_time):
+def calculate_time_ago(last_handshake_time):
     current_time = int(time.time())
     time_difference = current_time - last_handshake_time
-    return round(time_difference / 60)
+    minutes = time_difference // 60
+    hours = minutes // 60
+    days = hours // 24
+    return days, hours % 24, minutes % 60  # Возвращаем кортеж из дней, часов и минут
 
 # Инициализация окна curses
 stdscr = curses.initscr()
@@ -93,20 +96,23 @@ try:
 
                     # Преобразуем время последнего handshake в формат Unix timestamp
                     last_handshake_time = int(last_handshake)
-
+                    
                     # Сохраняем информацию о времени последнего handshake для клиента
                     clients_handshake_times[client_name] = last_handshake_time
 
         # Разделяем клиентов на онлайн и оффлайн
-        online_clients = {name: info for name, info in clients_info.items() if int(info['received_bytes']) != 0 or int(info['sent_bytes']) != 0}
-        offline_clients = {name: info for name, info in clients_info.items() if name not in online_clients or (name in clients_handshake_times and clients_handshake_times[name] == 0)}
+        online_clients = {}
+        offline_clients = {}
 
-        # Удаляем из списка онлайн клиентов тех, у которых последний handshake был более 5 минут назад
+        # Обходим всех клиентов и определяем их статус
         for client_name, handshake_time in clients_handshake_times.items():
-            if client_name in online_clients and calculate_minutes_ago(handshake_time) > 5:
-                offline_clients[client_name] = online_clients.pop(client_name)
+            days, _, minutes = calculate_time_ago(handshake_time)
+            if days == 0 and minutes <= 5:  # Если последний handshake был в пределах 5 минут, считаем клиента онлайн
+                online_clients[client_name] = clients_info[client_name]
+            else:
+                offline_clients[client_name] = clients_info[client_name]
 
-        # Сортируем клиентов по общему объему трафика
+        # Сортируем онлайн клиентов по общему объему трафика
         sorted_online_clients = sorted(online_clients.items(), key=lambda x: int(x[1]['received_bytes']) + int(x[1]['sent_bytes']), reverse=True)
 
         # Выводим информацию об онлайн клиентах
@@ -114,18 +120,31 @@ try:
             last_handshake_text = "N/A"
             if client_name in clients_handshake_times and clients_handshake_times[client_name] != 0:
                 last_handshake_time = clients_handshake_times[client_name]
-                minutes_ago = calculate_minutes_ago(last_handshake_time)
-                last_handshake_text = f"{minutes_ago} мин. назад"
-            stdscr.addstr(f"{client_name + ':':<20}", curses.color_pair(1))
-            stdscr.addstr(f"RX: {bytes_to_megabytes(info['sent_bytes']):<10} , TX: {bytes_to_megabytes(info['received_bytes']):<10} {last_handshake_text}\n")
+                days, hours, minutes = calculate_time_ago(last_handshake_time)
+                if days > 0:
+                    last_handshake_text = f"{days}d {hours}h {minutes}m ago"
+                elif hours > 0:
+                    last_handshake_text = f"{hours}h {minutes}m ago"
+                else:
+                    last_handshake_text = f"{minutes}m ago"
+            stdscr.addstr(f"{client_name + '':<21}", curses.color_pair(1))
+            stdscr.addstr(f"| RX: {bytes_to_megabytes(info['sent_bytes']):<10} |  TX: {bytes_to_megabytes(info['received_bytes']):<10} | {last_handshake_text}\n")
+
+        # Сортируем оффлайн клиентов по времени последнего handshake
+        sorted_offline_clients = sorted(offline_clients.items(), key=lambda x: clients_handshake_times[x[0]], reverse=True)
 
         # Выводим информацию об оффлайн клиентах
-        if offline_clients:
+        if sorted_offline_clients:
             stdscr.addstr("\nOffline:\n\n", curses.color_pair(2))
-            for client_name in offline_clients:
+            for client_name, info in sorted_offline_clients:
                 if client_name in clients_handshake_times and clients_handshake_times[client_name] != 0:
-                    minutes_ago = calculate_minutes_ago(clients_handshake_times[client_name])
-                    stdscr.addstr(f"{client_name} (был {minutes_ago} мин. назад)\n")
+                    days, hours, minutes = calculate_time_ago(clients_handshake_times[client_name])
+                    if days > 0:
+                        stdscr.addstr(f"{client_name+ '':<21} {days}d {hours}h {minutes}m ago\n")
+                    elif hours > 0:
+                        stdscr.addstr(f"{client_name+ '':<21} {hours}h {minutes}m ago\n")
+                    else:
+                        stdscr.addstr(f"{client_name+ '':<21} {minutes}m ago\n")
                 else:
                     stdscr.addstr(f"{client_name}\n")
 

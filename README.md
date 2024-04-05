@@ -18,16 +18,20 @@ Test at Ubuntu Server 22.04.4 LTS
 
 Script output should looks like:
 ```
-CLIENT_NAME1:      RX: 4.64 GB    , TX: 327.09 MB  2 min. ago
-CLIENT_NAME2:      RX: 869.96 MB  , TX: 47.22 MB   0 min. ago
-CLIENT_NAME3:      RX: 774.86 MB  , TX: 33.36 MB   1 min. ago
-CLIENT_NAME4:      RX: 85.94 MB   , TX: 29.89 MB   1 min. ago
-CLIENT_NAME5:      RX: 87.34 MB   , TX: 17.68 MB   2 min. ago
+CLIENT NAME 1| RX: 34.05 GB   |  TX: 534.47 MB  | 0m ago
+CLIENT NAME 2 | RX: 13.12 GB   |  TX: 904.05 MB  | 1m ago
+CLIENT NAME 3 | RX: 1.52 GB    |  TX: 779.95 MB  | 0m ago
+CLIENT NAME 4 | RX: 1.54 GB    |  TX: 302.7 MB   | 0m ago
+CLIENT NAME 5 | RX: 242.89 MB  |  TX: 81.8 MB    | 0m ago
 
 Offline:
 
-CLIENT_NAME6
-CLIENT_NAME7 (last seen 15 min ago)
+OFFLINE_CLIENT    8h 8m ago
+OFFLINE_CLIENT    1d 0h 22m ago
+OFFLINE_CLIENT    1d 8h 50m ago
+OFFLINE_CLIENT    2d 9h 20m ago
+OFFLINE_CLIENT
+OFFLINE_CLIENT
 ```
 
 Information automactically updates every 2 seconds

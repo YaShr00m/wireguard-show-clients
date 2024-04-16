@@ -27,6 +27,14 @@ def calculate_time_ago(last_handshake_time):
     seconds = time_difference % 60
     return hours, minutes, seconds  # Возвращаем часы, минуты и секунды
 
+def format_last_handshake(hours, minutes, seconds):
+    if hours == 0 and minutes == 0:
+        return f"{seconds} sec ago"
+    elif hours == 0:
+        return f"{minutes}m {seconds}s ago"
+    else:
+        return f"{hours}h {minutes}m ago"
+
 def main(stdscr):
     curses.noecho()
     curses.cbreak()
@@ -120,11 +128,7 @@ def main(stdscr):
                 if client_name in clients_handshake_times and clients_handshake_times[client_name] != 0:
                     last_handshake_time = clients_handshake_times[client_name]
                     hours, minutes, seconds = calculate_time_ago(last_handshake_time)
-                    if hours > 0:
-                        last_handshake_text += f"{hours}h "
-                    if minutes > 0:
-                        last_handshake_text += f"{minutes}m "
-                    last_handshake_text += f"{seconds}s ago"
+                    last_handshake_text = format_last_handshake(hours, minutes, seconds)
                 stdscr.addstr(f"{client_name + '':<21}", curses.color_pair(1))
                 stdscr.addstr(f"| RX: {bytes_to_megabytes(info['sent_bytes']):<10} |  TX: {bytes_to_megabytes(info['received_bytes']):<10} | {last_handshake_text}\n")
 
@@ -134,14 +138,11 @@ def main(stdscr):
                 stdscr.addstr("\nOffline:\n\n", curses.color_pair(2))
                 sorted_offline_clients = sorted(offline_clients.items(), key=lambda x: clients_handshake_times[x[0]], reverse=True)
                 for client_name, info in sorted_offline_clients:
-                    last_handshake_text = "N/A"
+                    last_handshake_text = ""
                     if client_name in clients_handshake_times and clients_handshake_times[client_name] != 0:
                         last_handshake_time = clients_handshake_times[client_name]
                         hours, minutes, seconds = calculate_time_ago(last_handshake_time)
-                        if hours > 0:
-                            last_handshake_text = f"{hours}h {minutes}m ago"
-                        else:
-                            last_handshake_text = f"{minutes}m {seconds}s ago"
+                        last_handshake_text = format_last_handshake(hours, minutes, seconds)
                     stdscr.addstr(f"{client_name + '':<21} {last_handshake_text}\n")
 
             stdscr.refresh()  # Обновить экран
